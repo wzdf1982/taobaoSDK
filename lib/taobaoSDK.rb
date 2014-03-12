@@ -155,6 +155,7 @@ require "taobaoSDK/model/logistics_orders_get_response"
 require "taobaoSDK/model/logistics_partners_get_response"
 require "taobaoSDK/model/logistics_trace_search_response"
 require "taobaoSDK/model/topats_delivery_send_response"
+require "taobaoSDK/model/logistics_ordertrace_push_response"
 
 #########################店铺API#################################
 require "taobaoSDK/model/shop_cat"
