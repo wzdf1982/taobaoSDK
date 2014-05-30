@@ -180,7 +180,7 @@ module TaobaoSDK
 
       #处理参数
       def merge_params_without_token(params)
-        params = full_options_without_session params
+        params = full_options_without_token params
         #删除空值及image
         params.delete_if {|k,v| v.blank?}
         #对参数进行签名(除了image参数外)
