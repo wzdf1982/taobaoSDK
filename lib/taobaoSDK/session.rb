@@ -35,6 +35,17 @@ module TaobaoSDK
         end
         res
       end
+
+      def invoke_without_token(params)
+        params = merge_params_without_token(params)
+        response_body = RestClient.post(config['endpoint'],params).body
+        res = parse_result(response_body)
+        if res.is_a? TaobaoSDK::ErrorResponse
+          raise res.msg
+        end
+        res
+      end
+
       #获取taobao oauth authorize url
       def authorize_url
         "#{config['authorize']}?response_type=code&client_id=#{config['app_key']}&redirect_uri=#{config['authorize_redirect_uri']}&state=1212&view=web" 
@@ -146,6 +157,30 @@ module TaobaoSDK
       #处理参数
       def merge_params(params)
         params = full_options params
+        #删除空值及image
+        params.delete_if {|k,v| v.blank?}
+        #对参数进行签名(除了image参数外)
+        for_sign_params = params.merge({})
+        for_sign_params.delete(:image)
+        for_sign_params.delete(:img)
+        params[:sign] = sign for_sign_params
+        params
+      end
+
+
+      def full_options_without_token(params)
+        {
+          :timestamp   => Time.now.strftime("%F %T"),
+          :v           => API_VERSION,
+          :format      => :xml,
+          :sign_method => :md5,
+          :app_key     => config['app_key_without_token']
+        }.merge params
+      end
+
+      #处理参数
+      def merge_params_without_token(params)
+        params = full_options_without_session params
         #删除空值及image
         params.delete_if {|k,v| v.blank?}
         #对参数进行签名(除了image参数外)
