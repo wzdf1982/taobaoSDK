@@ -120,6 +120,15 @@ module TaobaoSDK
         config['secret_key'] + s + config['secret_key']
       end
 
+      # Return request signature with MD5 signature method
+      def sign_without_token(params)
+        Digest::MD5::hexdigest(wrap_with_secret_without_token sorted_option_string(params)).upcase
+      end
+
+      def wrap_with_secret_without_token(s)
+        config['secret_key_without_token'] + s + config['secret_key_without_token']
+      end
+
       # Return sorted request parameter by request key
       def sorted_option_string(options)
         options.map {|k, v| "#{k}#{v}" }.sort.join
@@ -187,7 +196,7 @@ module TaobaoSDK
         for_sign_params = params.merge({})
         for_sign_params.delete(:image)
         for_sign_params.delete(:img)
-        params[:sign] = sign for_sign_params
+        params[:sign] = sign_without_token for_sign_params
         params
       end
 
