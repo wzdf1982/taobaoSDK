@@ -31,7 +31,7 @@ module TaobaoSDK
         response_body = RestClient.post(config['endpoint'],params).body
         res = parse_result(response_body)
         if res.is_a? TaobaoSDK::ErrorResponse
-          raise "#{res.msg}, #{res.code}"
+          raise "msg:#{res.msg}, code:#{res.code}, sub_msg:#{res.sub_msg}, sub_cod:#{res.sub_code}"
         end
         res
       end
@@ -41,7 +41,7 @@ module TaobaoSDK
         response_body = RestClient.post(config['endpoint'],params).body
         res = parse_result(response_body)
         if res.is_a? TaobaoSDK::ErrorResponse
-          raise res.msg
+          raise "msg:#{res.msg}, code:#{res.code}, sub_msg:#{res.sub_msg}, sub_cod:#{res.sub_code}"
         end
         res
       end
