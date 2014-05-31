@@ -37,6 +37,7 @@ module TaobaoSDK
       end
 
       def invoke_without_token(params)
+        @sample = nil
         params = merge_params_without_token(params)
         response_body = RestClient.post(config['endpoint'],params).body
         res = parse_result(response_body)
@@ -126,7 +127,7 @@ module TaobaoSDK
       end
 
       def wrap_with_secret_without_token(s)
-        config['secret_key_without_token'] + s + config['secret_key_without_token']
+         secret_key_without_token + s + secret_key_without_token
       end
 
       # Return sorted request parameter by request key
@@ -176,6 +177,13 @@ module TaobaoSDK
         params
       end
 
+      def app_without_token_number
+        config['app_key_without_token'].split(',').size
+      end
+
+      def sample_app_without_token
+        @sample ||= Random.rand app_without_token_number 
+      end
 
       def full_options_without_token(params)
         {
@@ -183,8 +191,16 @@ module TaobaoSDK
           :v           => API_VERSION,
           :format      => :xml,
           :sign_method => :md5,
-          :app_key     => config['app_key_without_token']
+          :app_key     => app_key_without_token
         }.merge params
+      end
+
+      def app_key_without_token
+        config['app_key_without_token'].split(',')[sample_app_without_token]
+      end
+
+      def secret_key_without_token
+        config['secret_key_without_token'].split(',')[sample_app_without_token]
       end
 
       #处理参数
