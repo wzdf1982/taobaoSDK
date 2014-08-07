@@ -16,7 +16,7 @@ module TaobaoSDK
             res_json = TaobaoSDK::Session.token(params['code'])
             logger.debug res_json
             session[:taobao_access_token] = HashWithIndifferentAccess.new(res_json)
-            redirect_to :root
+            redirect_to :callback
           end
         end
 
